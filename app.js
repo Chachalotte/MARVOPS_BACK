@@ -1,5 +1,22 @@
 const express = require('express');
 
+const mongoose = require("mongoose");
+const username = "lusky75"
+const password = "iiluskyii75"
+const dbname = "test"
+const url = 'mongodb+srv://' + username + ':' + password + '@cluster0.tbkc4.mongodb.net/' + dbname + '?retryWrites=true&w=majority'
+
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})   
+.then(() => console.log("Database connected!"))
+.catch(err => console.log(err));
+
+//models
+const userModel = require("./src/models/users");
+const productModel = require("./src/models/products");
+
 const app = express();
 app.use(express.json());
 
@@ -39,6 +56,26 @@ app.post('/api/stuff', (req, res, next) => {
   });
 });
 
+app.post('/user/insert', (req, res, next) => {
+    const newUser = new userModel({
+      name: "Lucas",
+      age: 24
+    });
+
+    newUser.save();
+    res.status(200).send(newUser);
+})
+
+
+
+app.post('/product/insert', (req, res, next) => {
+  const newProduct = new productModel({
+    name: "T-shirt"
+  });
+
+  newProduct.save();
+  res.status(200).send(newProduct);
+})
 
 
 module.exports = app;

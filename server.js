@@ -48,26 +48,5 @@ server.listen(port);
 
 const express = require('express');
 
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://lusky75:iiluskyii75@cluster0.tbkc4.mongodb.net/test?retryWrites=true&w=majority';
-
-MongoClient.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}, (err, client) => {
-    if (err) {
-        return console.log("error1:" . err);
-    }
-
-    console.log(`MongoDB Connected: ${url}`);
-    const db = client.db('test');
-
-    const courses = db.collection('test');
-    courses.insertOne({ name: 'Charlotte' }, (err, result) => { 
-        if (err) {
-            return console.log("error:". err);
-        }
-        console.log(`MongoDB Connected: ${result.acknowledged}`)
-    });
-});
+module.exports = server;
 
