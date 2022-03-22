@@ -41,12 +41,12 @@ app.post('/user/insert', (req, res, next) => {
     const name = req.body.name
     const age = req.body.age
     if (age == null) {
-      return res.status(500).send({
+      return res.json({
           "error": "age field is missing"
       }); 
     }
     if (name == null) {
-      return res.status(500).send({
+      return res.json({
         "error": "name field is missing"
       });
     }
