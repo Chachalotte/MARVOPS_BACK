@@ -71,11 +71,3 @@ MongoClient.connect(url, {
     });
 });
 
-app.get('/', (req, res) => {
-    res.set('Content-Type', 'text/html');
-    res.send('Helloo world !!');
-});
-
-app.listen(port, () => {
-    console.log('Server app listening on port ' + port);
-});
