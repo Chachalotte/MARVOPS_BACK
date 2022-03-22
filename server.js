@@ -1,5 +1,6 @@
 const http = require('http');
 const app = require('./app');
+const express = require('express');
 
 const normalizePort = val => {
     const port = parseInt(val, 10);
@@ -36,6 +37,16 @@ const errorHandler = error => {
 };
 
 const server = http.createServer(app);
+const io = require('socket.io').listen(server)
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+  });
+  
+  io.on('connection', (socket) => {
+    console.log('a user connected');
+  });
+  
 
 server.on('error', errorHandler);
 server.on('listening', () => {
@@ -46,7 +57,7 @@ server.on('listening', () => {
 
 server.listen(port);
 
-const express = require('express');
+
 
 module.exports = server;
 
