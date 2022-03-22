@@ -37,7 +37,8 @@ const errorHandler = error => {
 };
 
 const server = http.createServer(app);
-const io = require('socket.io').listen(server)
+var socket = require('socket.io')
+let io = socket(server)
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
