@@ -5,6 +5,7 @@ const username = "lusky75"
 const password = "iiluskyii75"
 const dbname = "test"
 const url = 'mongodb+srv://' + username + ':' + password + '@cluster0.tbkc4.mongodb.net/' + dbname + '?retryWrites=true&w=majority'
+const productRoute = require('./src/routes/productRoute');
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -15,19 +16,11 @@ mongoose.connect(url, {
 
 //models
 const userModel = require("./src/models/users");
-const productModel = require("./src/models/products");
 
 const app = express();
 app.use(express.json());
 
-//methods
-function isEmpty(obj) {
-  for(var prop in obj) {
-      if(obj.hasOwnProperty(prop))
-          return false;
-  }
-  return JSON.stringify(obj) === JSON.stringify({});
-}
+app.use('/product', productRoute);
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -56,14 +49,6 @@ app.post('/user/insert', (req, res, next) => {
     res.status(200).send(newUser);
 })
 
-
-
-app.post('/product/insert', (req, res, next) => {
-  const newProduct = new productModel(req.body);
-
-  newProduct.save();
-  res.status(200).send(newProduct);
-})
 
 
 module.exports = app;
