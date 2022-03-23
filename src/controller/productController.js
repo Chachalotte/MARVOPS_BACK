@@ -27,11 +27,14 @@ exports.editAProduct = (req, res, next) => {
 
 exports.getProductsFiltered = (req, res, next) => {
     const filters = req.body.filters;
+    const price = req.body.filters[0].price;
+    const category = req.body.filters[0].category;
 
-    filters.forEach(element => {
-        console.log(element);
-        productModel.find({"category.type" : element }).then((model) => {
-            console.log('trouvé !');
-        });
-    })
+        productModel.find({filters:{ $elemMatch: { $or: [{ category: category},{price: price} ] }}}).then((model) => {
+                console.log('trouvé !');
+                res.json({
+                    msg: `model updated${model}`                            
+                });
+            });
+
 }

@@ -1,34 +1,40 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const ProductSchema = new mongoose.Schema({
-  title: {
+const filterSchema = new Schema({ category: String, price: Number, stock: Number });
+const ProductSchema = new Schema({
+    title: {
     type: String,
     required: false,
-  },
-  image: {
-      type: String,
-      required: false
-  },
-  color: {
-      type: [],
-      required: false
-  },
-  category: {
-      type: [],
-      required: false
-  },
-  price: {
-      type: Number,
-      required: false
-  },
-  description: {
-      type: String,
-      required: false
-  },
-  stock: {
-      type: Number,
-      required: false
-  }
+    },
+    image: {
+        type: String,
+        required: false
+    },
+    color: {
+        type: [],
+        required: false
+    },
+    filters: {
+    type: [filterSchema],
+    required: true
+    },
+    category: {
+    type: [],
+    required: false
+    },
+    price: {
+        type: Number,
+        required: false
+    },
+    description: {
+        type: String,
+        required: false
+    },
+    stock: {
+        type: Number,
+        required: false
+    }
 
 });
 
