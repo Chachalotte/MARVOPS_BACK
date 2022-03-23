@@ -33,7 +33,8 @@ exports.getProductsFiltered = (req, res, next) => {
         productModel.find({filters:{ $elemMatch: { $or: [{ category: category},{price: price} ] }}}).then((model) => {
                 console.log('trouvé !');
                 res.json({
-                    msg: `model updated${model}`                            
+                    "Message": "List products filtered successfully !",
+                    "products": model         
                 });
             });
 

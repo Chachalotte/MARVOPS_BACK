@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Products</title>
+  </head>
+  <body>
+    <ul id="products"></ul>
+    <input id="searchInput" type="text" onkeyup="cleRelachee(event)">
+    
+  </body>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+        var socket = io();
+        let searchValue = ""
+
+        var listOfProductsToDisplay = []
+
+        function cleRelachee(event) {
+            searchValue = document.getElementById("searchInput").value
+            console.log(searchValue) 
+            socket.emit('filteredProduct', { "category": searchValue});
+        }
+
+        var products = document.getElementById('products');
+
+        socket.on('listProduct', function(data) {
+
+            var item = document.createElement('li');
+            console.log("listProduct:" + data)
+            listOfProductsToDisplay = data
+
+            displayListOfProduct()
+            window.scrollTo(0, document.body.scrollHeight);
+        })
+
+        function displayListOfProduct() {
+            for (product in listOfProductsToDisplay) {
+                //create li ...
+            }
+        }
+
+// socket.on('chat message', function(msg) {
+//   var item = document.createElement('li');
+//   console.log(msg)
+//   item.textContent = msg;
+//   messages.appendChild(item);
+//   window.scrollTo(0, document.body.scrollHeight);
+// });
+
+// socket.on('count', function(countUser) {
+//     document.getElementById('count').innerHTML = countUser
+// });
+  </script>
+</html>

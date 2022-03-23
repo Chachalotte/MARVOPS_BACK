@@ -44,12 +44,39 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/products', (req, res) => {
+    res.sendFile(__dirname + '/products.html');
+});
+
+var count = 0
+
+const productModel = require("./src/models/products");
+
 io.on('connection', (socket) => {
-socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+    count++
+    io.emit('count', count)
+
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg);
+    });
+
+    socket.on('disconnect', () => {
+        count--
+        io.emit('count', count)
+    })
+
+    socket.on('filteredProduct', function(data) {
+        console.log(data)
+        const price = data.price;
+        const category = data.category;
+        console.log(data.category + ", " + data.price)
+    
+        productModel.find({filters:{ $elemMatch: { $or: [{ category: category},{price: price} ] }}}).then((model) => {
+            let listProducts = "" + model
+            socket.emit('listProduct', listProducts)
+        });
+    })
 });
-});
-  
 
 server.on('error', errorHandler);
 server.on('listening', () => {
