@@ -7,6 +7,7 @@ const dbname = "test"
 const url = 'mongodb+srv://' + username + ':' + password + '@cluster0.tbkc4.mongodb.net/' + dbname + '?retryWrites=true&w=majority'
 const productRoute = require('./src/routes/productRoute');
 
+
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -48,7 +49,6 @@ app.post('/user/insert', (req, res, next) => {
     newUser.save();
     res.status(200).send(newUser);
 })
-
 
 
 module.exports = app;
