@@ -1,54 +1,60 @@
-const http = require('http');
-const app = require('./app');
-const express = require('express');
+const app = require("./app");
+const cors = require("cors");
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 
-const normalizePort = val => {
-    const port = parseInt(val, 10);
+const normalizePort = (val) => {
+  const port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        return val;
-    }
-    if (port >= 0) {
-        return port;
-    }
-    return false;
+  if (isNaN(port)) {
+    return val;
+  }
+  if (port >= 0) {
+    return port;
+  }
+  return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+const port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
 
-const errorHandler = error => {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
-    const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
-    switch (error.code) {
-        case 'EACCES':
-        console.error(bind + ' requires elevated privileges.');
-        process.exit(1);
-        break;
-        case 'EADDRINUSE':
-        console.error(bind + ' is already in use.');
-        process.exit(1);
-        break;
-        default:
-        throw error;
-    }
+const errorHandler = (error) => {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const address = server.address();
+  const bind =
+    typeof address === "string" ? "pipe " + address : "port: " + port;
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges.");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use.");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 };
 
 const server = http.createServer(app);
-var socket = require('socket.io')
-let io = socket(server)
-
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+let io = new Server(server, {
+  cors: {
+    origin: true,
+  },
 });
 
-app.get('/products', (req, res) => {
-    res.sendFile(__dirname + '/products.html');
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
 });
 
-var count = 0
+app.get("/products", (req, res) => {
+  res.sendFile(__dirname + "/products.html");
+});
+
+var count = 0;
 
 const productModel = require("./src/models/products");
 
@@ -75,19 +81,18 @@ io.on('connection', (socket) => {
             let listProducts = "" + model
             socket.emit('listProduct', listProducts)
         });
-    })
-});
+        socket.emit("listProducts", listProducts);
+      });
+  });
 
-server.on('error', errorHandler);
-server.on('listening', () => {
-    const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-    console.log('Listening on ' + bind);
+
+server.on("error", errorHandler);
+server.on("listening", () => {
+  const address = server.address();
+  const bind = typeof address === "string" ? "pipe " + address : "port " + port;
+  console.log("Listening on " + bind);
 });
 
 server.listen(port);
 
-
-
 module.exports = server;
-
