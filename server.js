@@ -56,8 +56,8 @@ io.on('connection', (socket) => {
     count++
     io.emit('count', count)
 
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg);
+    socket.on('chat message', ({msg, sessionId}) => {
+        io.emit('chat message', {msg, sessionId});
     });
 
     socket.on('disconnect', () => {
