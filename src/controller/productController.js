@@ -30,6 +30,37 @@ exports.editAProduct = (req, res, next) => {
     });
 };
 
+exports.selectAProduct = (req, res, next) => {
+    const modelId = req.params.idProduct;
+  
+    productModel
+      .findById(modelId)
+      .then((updatedModel) => {
+        res.json({
+          msg: "model updated",
+          updatedModel,
+        });
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  };
+
+exports.deleteAProduct = (req, res, next) => {
+    const modelId = req.params.idProduct;
+
+    productModel
+    .findByIdAndRemove(modelId)
+    .then((model) => {
+    res.json({
+        msg: "Produit supprimé !",
+        deleteModel,
+        });      })
+    .catch((err) => {
+    res.send(err);
+    });
+};
+
 exports.getProductsFiltered = (req, res, next) => {
   const filters = req.body.filters;
   const price = req.body.filters[0].price;
