@@ -58,33 +58,40 @@ var count = 0;
 
 const productModel = require("./src/models/products");
 
-io.on('connection', (socket) => {
-    count++
-    io.emit('count', count)
+io.on("connection", (socket) => {
+  count++;
+  io.emit("count", count);
 
-    socket.on('chat message', ({msg, sessionId}) => {
-        io.emit('chat message', {msg, sessionId});
-    });
-
-    socket.on('disconnect', () => {
-        count--
-        io.emit('count', count)
-    })
-
-    socket.on('filteredProduct', function(data) {
-        console.log(data)
-        const price = data.price;
-        const category = data.category;
-        console.log(data.category + ", " + data.price)
-    
-        productModel.find({filters:{ $elemMatch: { $or: [{ category: category},{price: price} ] }}}).then((model) => {
-            let listProducts = "" + model
-            socket.emit('listProduct', listProducts)
-        });
-        socket.emit("listProducts", listProducts);
-      });
+  socket.on("chat message", ({ msg, sessionId }) => {
+    io.emit("chat message", { msg, sessionId });
   });
 
+  socket.on("disconnect", () => {
+    count--;
+    io.emit("count", count);
+  });
+
+  socket.on("filteredProduct", function (data) {
+    console.log(data);
+    const price = data.price;
+    const category = data.category;
+
+    productModel
+      .find({
+        filters: {
+          $elemMatch: { $or: [{ category: category }, { price: price }] },
+        },
+      })
+      .then((model) => {
+        let listProducts = [];
+        model.forEach(function (productModel) {
+          listProducts.push(productModel);
+        });
+        console.log(listProducts);
+        socket.emit("listProduct", listProducts);
+      });
+  });
+});
 
 server.on("error", errorHandler);
 server.on("listening", () => {
